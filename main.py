@@ -19,7 +19,7 @@ os.dupterm(uart0)
 
 psu_set = Pin(14, Pin.OUT)
 psu_sense = Pin(15, Pin.IN)
-usb_sense = Pin(25, Pin.IN)
+psu_reset = Pin(13, Pin.OUT)
 psu = helpers.SRLatch(psu_set, psu_reset, psu_sense)
 psu.off()
 
@@ -141,7 +141,7 @@ if CONFIG["monitoring"]["use_ext_probe"]:
 led = Pin(6, Pin.OUT)
 fan_fail = Pin(10, Pin.IN, Pin.PULL_UP)
 power_btn = Pin(12, Pin.IN, Pin.PULL_UP)
-psu_reset = Pin(13, Pin.OUT)
+usb_sense = Pin(25, Pin.IN)
 # Interrupts
 power_btn.irq(trigger=Pin.IRQ_FALLING, handler=power_debounce)
 fan_fail.irq(trigger=Pin.IRQ_FALLING, handler=fan_fail_handler)
