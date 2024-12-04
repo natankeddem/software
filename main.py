@@ -17,6 +17,12 @@ uart0 = UART(0)
 uart0.init(tx=16, rx=17)
 os.dupterm(uart0)
 
+psu_set = Pin(14, Pin.OUT)
+psu_sense = Pin(15, Pin.IN)
+usb_sense = Pin(25, Pin.IN)
+psu = helpers.SRLatch(psu_set, psu_reset, psu_sense)
+psu.off()
+
 VERSION = "1.2.0"
 DEFAULT_CONFIG = {
     "network": {
@@ -136,17 +142,12 @@ led = Pin(6, Pin.OUT)
 fan_fail = Pin(10, Pin.IN, Pin.PULL_UP)
 power_btn = Pin(12, Pin.IN, Pin.PULL_UP)
 psu_reset = Pin(13, Pin.OUT)
-psu_set = Pin(14, Pin.OUT)
-psu_sense = Pin(15, Pin.IN)
-usb_sense = Pin(25, Pin.IN)
 # Interrupts
 power_btn.irq(trigger=Pin.IRQ_FALLING, handler=power_debounce)
 fan_fail.irq(trigger=Pin.IRQ_FALLING, handler=fan_fail_handler)
 if CONFIG['power']['follow_usb']:
     usb_sense.irq(trigger=Pin.IRQ_RISING, handler=usb_pin_check)
     usb_sense.irq(trigger=Pin.IRQ_FALLING, handler=usb_pin_check)
-
-psu = helpers.SRLatch(psu_set, psu_reset, psu_sense)
 
 if CONFIG["power"]["on_boot"]:
     time.sleep(CONFIG["power"]["on_boot_delay"])
